@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<title>MathJax Interactive AsciiMath Lab</title>
+<!-- Copyright (c) 2010 by The MathJax Consortium.  All rights reserved. -->
+<script>
+var Lab = {
+  webFonts: true,
+  localFonts: true,
+  prefFont: "TeX",
+  output: "HTML-CSS",
+  defaultMath: 'text{[Math]}',
+  version: "2.6",
+  unpacked: true,
+  auto: false,
+
+  getVars: function  () {
+    MML = MathJax.ElementJax.mml;
+    AM = MathJax.InputJax.AsciiMath;
+    HTMLCSS = MathJax.OutputJax["HTML-CSS"];
+    PHTML = MathJax.OutputJax.PreviewHTML;
+    CHTML = MathJax.OutputJax.CommonHTML;
+    SVG = MathJax.OutputJax.SVG;
+    NMML = MathJax.OutputJax.NativeMML;
+  },
+
+  focus: function () {this.Math.focus()},
+  select: function () {this.Math.focus(); this.Math.select()},
+
+  Typeset: function() {
+    var math = this.Math.value;
+    MathJax.Hub.Queue(
+      ["Text",this.jax,""],
+      ["Text",this.jax,math]
+    );
+    if (this.showMathML) {MathJax.Hub.Queue(["ShowMathML",Lab])}
+  },
+
+  setPrefFont: function (font) {
+    this.prefFont = font;
+    this.reload();
+  },
+
+  setWebFont: function (allow) {
+    this.webFonts = allow;
+    this.reload();
+  },
+
+  setLocalFont: function (allow) {
+    this.localFonts = allow;
+    this.reload();
+  },
+
+  setOutput: function (mode) {
+    this.output = mode;
+    MathJax.Hub.Queue(
+      ["setRenderer",MathJax.Hub,mode,"jax/mml"],
+      ["Rerender",MathJax.Hub]
+    );
+  },
+
+  setVersion: function (version) {
+    this.version = version;
+    this.reload();
+  },
+  setUnpacked: function (unpacked) {
+    this.unpacked = unpacked;
+    this.reload();
+  },
+
+  setAutoTypeset: function (auto) {
+    this.autoTypeset = auto;
+    if (auto) {
+      this.Math.onkeyup = this.AutoTypeset
+      this.Typeset();
+    } else {
+      this.Math.onkeyup = null;
+    }
+    this.focus();
+  },
+  AutoTypeset: function () {setTimeout("Lab.Typeset()",0)},
+
+  setMathML: function (show) {
+    this.showMathML = show;
+    this.MathML.style.display = (show ? "" : "none");
+    if (show) {this.ShowMathML()}
+    this.focus();
+  },
+  ShowMathML: function () {
+    try {this.MathML.value = this.jax.root.toMathML()} catch (err) {
+      if (!err.restart) {throw err}
+      MathJax.Callback.After(["ShowMathML",this],err.callback);
+    }
+    return;
+  },
+
+  startTimer: function () {this.start = new Date().getTime()},
+  endTimer: function () {
+    var time = (new Date().getTime() - this.start)/1000;
+    this.time.innerHTML = time + " secs";
+  },
+
+  checkKey: function (textarea,event) {
+    if (!event) {event = window.event}
+    var code = event.which || event.keyCode;
+    if ((event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) &&
+        (code === 13 || code === 10)) {
+      if (event.preventDefault) {event.preventDefault()}
+      event.returnValue = false;
+      this.Typeset();
+    }
+  },
+
+  Example: {
+  },
+  Select: function (which) {
+    if (which === "") return;
+    var param = [];
+    if (this.output !== "HTML-CSS") {param.push("output="+this.output)}
+    if (this.prefFont !== "TeX") {param.push("prefFont="+this.prefFont)}
+    if (!this.webFonts) {param.push("webFonts=false")}
+    if (!this.localFonts) {param.push("localFonts=false")}
+    if (this.version != "develop") {param.push("version="+this.version)}
+    if (!this.unpacked) {param.push("unpacked=false")}
+    if (this.autoTypeset) {param.push("autoTypeset=true")}
+    if (this.showMathML)  {param.push("showMathML=true")}
+    param.push(this.Example[which]);
+    window.location = String(window.location).replace(/\?(.|\n)*/,"") + "?" + param.join("&");
+  },
+
+  reload: function () {
+    var param = [];
+    if (this.output !== "HTML-CSS") {param.push("output="+this.output)}
+    if (this.prefFont !== "TeX") {param.push("prefFont="+this.prefFont)}
+    if (!this.webFonts) {param.push("webFonts=false")}
+    if (!this.localFonts) {param.push("localFonts=false")}
+    if (this.version != "develop") {param.push("version="+this.version)}
+    if (!this.unpacked) {param.push("unpacked=false")}
+    if (this.autoTypeset) {param.push("autoTypeset=true")}
+    if (this.showMathML)  {param.push("showMathML=true")}
+    if (this.Math.value !== this.defaultMath) {param.push("initialMath="+escape(this.Math.value))}
+    if (param.length) {param = "?"+param.join("&")} else {param = ""}
+    window.location = String(window.location).replace(/\?.*/,"")+param;
+  },
+
+  unpack: function (string) {
+    if (!string.match(/\S/)) return;
+    var param = string.split(/&/);
+    for (var i = 0, m = param.length; i < m; i++) {
+      var keyvalue = param[i].split(/=/);
+      keyvalue[1] = unescape(keyvalue[1]);
+      if (keyvalue[1] === "true") {keyvalue[1] = true}
+      if (keyvalue[1] === "false") {keyvalue[1] = false}
+      this[keyvalue[0]] = keyvalue[1];
+    }
+  },
+
+  controls: {
+    prefFont:    function () {Lab.setPrefFont(this.value)},
+    webFonts:    function () {Lab.setWebFont(this.checked)},
+    localFonts:  function () {Lab.setLocalFont(this.checked)},
+    output:      function () {Lab.setOutput(this.value)},
+    version:     function () {Lab.setVersion(this.value)},
+    unpacked:    function () {Lab.setUnpacked(this.checked)},
+    autoTypeset: function () {Lab.setAutoTypeset(this.checked)},
+    showMathML:  function () {Lab.setMathML(this.checked)}
+  },
+
+  Startup: function () {
+    for (var i in this.controls) {if (this.controls.hasOwnProperty(i)) {
+      var control = document.getElementById(i);
+      if (control.type === "checkbox") {
+        control.checked = this[i];
+        control.onclick = this.controls[i];
+      } else {
+        control.value = this[i];
+        control.onchange = this.controls[i];
+      }
+    }}
+    var math = this.Math.value = this.initialMath || this.defaultMath;
+    if (this.autoTypeset) {this.Math.onkeyup = this.AutoTypeset}
+    if (this.showMathML) {this.MathML.style.display = ""}
+    this.jax = MathJax.Hub.getAllJax()[0];
+    if (math.replace(/\r\n?/g,"\n") !== this.defaultMath)
+      {this.Typeset(); this.focus()} else {this.select()}
+    this.getVars();
+  }
+
+}
+
+Lab.unpack(window.location.search.substr(1));
+
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["toMathML.js"],
+    jax: ["input/AsciiMath","output/"+Lab.output],
+    showProcessingMessages: false,
+    "HTML-CSS": {
+      preferredFont: (Lab.localFonts ? Lab.prefFont : null),
+      availableFonts: (Lab.localFonts ? [Lab.prefFont] : []),
+      webFont: (Lab.webFonts ? Lab.prefFont : null)
+    },
+    SVG: {
+      font: (Lab.prefFont === "STIX" ? "STIX-Web" : Lab.prefFont)
+    }
+  });
+  MathJax.Hub.processSectionDelay = 0;
+  MathJax.Hub.Register.MessageHook("Begin Process",["startTimer",Lab]);
+  MathJax.Hub.Register.MessageHook("End Process",["endTimer",Lab]);
+  MathJax.Hub.Register.MessageHook("Begin Update",["startTimer",Lab]);
+  MathJax.Hub.Register.MessageHook("End Update",["endTimer",Lab]);
+</script>
+<script>
+(function () {
+  var src = {develop: "../../../MathJax/", master: "../../../Git/MathJax/"}[Lab.version] ||
+              "http://cdn.mathjax.org/mathjax/"+Lab.version+"-latest/";
+  if (Lab.unpacked) {src += "unpacked/"}
+  src += "MathJax.js";
+  document.writeln('<script src="'+src+'"></'+'script>');
+})();
+</script>
+</head>
+<body style="background-color:#EEEEEE">
+
+<!-- *Begin-Document-Body -->
+
+<a href="TeX.html"><button>TeX</button></a>
+<a href="MathML.html"><button>MathML</button></a>
+<button disabled="true">AsciiMath</button>
+<p>
+
+<center>
+<table border="0" cellspacing="12" cellpadding="0" style="width:80%">
+
+<tr><td colspan="2"><center>
+<div style="border:3px ridge; padding:1em; background-color:white">
+<span style="font-size:133%">... some text before
+<span class="MathJax_Preview">[Math]</span><script type="math/asciimath">text{[Math]}</script>
+and some after ...</span>
+</div>
+</center></td></tr>
+
+<tr valign="TOP"><td width="80%"><textarea id="Math" rows="5" 
+style="font-family: monaco,courier; font-size:100%; width:100%"
+onkeypress="Lab.checkKey(this,event)"></textarea></td>
+
+<td rowspan="2" width="20%">
+<div style="border:3px groove; padding:10px; font-size:75%; text-align:left">
+
+<label><input type="checkbox" id="autoTypeset"> Typeset as you type</label><br>
+<label><input type="checkbox" id="showMathML"> Show MathML</label>
+<p>
+
+<nobr><label>Preferred font: <select id="prefFont">
+<option value="TeX">TeX</option>
+<option value="STIX">STIX</option>
+<option value="STIX-Web">STIX (Web)</option>
+<option value="Asana-Math">Asana</option>
+<option value="Gyre-Pagella">Gyre-Pagella</option>
+<option value="Gyre-Termes">Gyre-Termes</option>
+<option value="Latin-Modern">Latin-Modern</option>
+<option value="Neo-Euler">Neo-Euler</option>
+</select></label></nobr><br>
+Allow: <label><input type="checkbox" id="webFonts" CHECKED> web fonts</label>
+<label><input type="checkbox" id="localFonts" CHECKED> local fonts</label>
+<p>
+
+<nobr><label>Output Mode: <select id="output">
+<option value="HTML-CSS">HTML-CSS</option>
+<option value="CommonHTML">Common HTML</option>
+<option value="PreviewHTML">Preview HTML</option>
+<option value="NativeMML">Native MathML</option>
+<option value="SVG">SVG</option>
+<option value="PlainSource">Plain Source</option>
+</select></label></nobr>
+
+<p style="margin-bottom:0">
+
+<nobr><label>Version: <select id="version">
+<option value="develop">develop</option>
+<option value="master">master</option>
+<option value="2.6">v2.6</option>
+<option value="2.5">v2.5</option>
+<option value="2.4">v2.4</option>
+<option value="2.3">v2.3</option>
+<option value="2.2">v2.2</option>
+<option value="2.1">v2.1</option>
+<option value="2.0">v2.0</option>
+<option value="1.1">v1.1</option>
+<option value="1.0">v1.0</option>
+</select></label>
+<label><input type="checkbox" id="unpacked" CHECKED> unpacked</label></nobr>
+</div>
+<p>
+
+<center>
+<input type="button" value="Typeset" onclick="Lab.Typeset()"><br>
+<div style="margin-top:5px; font-size:75%">
+<nobr>Time: <span id="time"></span></nobr>
+
+<!--
+ | <p>
+ | <br>
+ | <label>Show: <select onchange="Lab.Select(this.value)">
+ | <option value="">(select example)</option>
+ | <option value="">----------------</option>
+ | </select></label>
+-->
+</div>
+
+</center>
+</td></tr>
+
+<tr><td>
+<textarea id="MathML" style="width:100%; height:15em; overflow:auto;
+border:1px inset; background-color:white; font-size:80%; display:none">
+</textarea>
+</td></tr>
+
+</table>
+</center>
+
+<script>
+Lab.Math = document.getElementById("Math");
+Lab.HTML = document.getElementById("HTML");
+Lab.time = document.getElementById("time");
+Lab.MathML = document.getElementById("MathML");
+MathJax.Hub.Queue(["Startup",Lab]);
+</script>
+
+</body>
+</html>

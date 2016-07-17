@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<title>MathJax Label Overlap Lab</title>
+<!-- Copyright (c) 2015 by The MathJax Consortium.  All rights reserved. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/HTML-CSS"],
+    extensions: ["tex2jax.js"],
+    displayIndent: "0em",
+    displayAlign: "left",
+    TeX: {TagSide:"left"},
+    "HTML-CSS":{noReflows:false}
+  });
+  MathJax.Hub.processSectionDelay = 0;
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
+<script>
+var Lab = {
+  init: function () {
+    this.container = document.getElementById("container");
+    MathJax.Hub.Config({
+      displayAlign: document.getElementById("align").value,
+      displayIndent: document.getElementById("indent").value,
+      TeX: {TagSide: document.getElementById("side").value}
+    });
+    MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
+      MathJax.ElementJax.mml.math.prototype.defaults.indentshift =
+        document.getElementById("shift").value;
+    });
+    this.setWidth(document.getElementById("width").value);
+    MathJax.Hub.Queue(function () {
+      Lab.showMarkers(document.getElementById("markers").checked);
+    });
+    MathJax.Hub.setRenderer(document.getElementById("renderer").value,"jax/mml");
+  },
+  setWidth: function (width) {
+    this.container.style.width = width+"%";
+    document.getElementById("range_output").innerHTML = width+"%";
+  },
+  setAlign: function (align) {
+    MathJax.Hub.Config({displayAlign:align});
+    MathJax.ElementJax.mml.mbase.prototype.displayAlign = align;
+    MathJax.Hub.Queue(["Rerender",MathJax.Hub]);
+  },
+  setIndent: function (indent) {
+    MathJax.Hub.Config({displayIndent:indent});
+    MathJax.ElementJax.mml.mbase.prototype.displayIndent = indent;
+    MathJax.Hub.Queue(["Rerender",MathJax.Hub]);
+  },
+  setSide: function (side) {
+    MathJax.Hub.Config({TeX: {TagSide: side}});
+    MathJax.Hub.Queue(["Reprocess",MathJax.Hub]);
+  },
+  setShift: function (shift) {
+    MathJax.ElementJax.mml.math.prototype.defaults.indentshift = shift;
+    MathJax.Hub.Queue(["Rerender",MathJax.Hub]);
+  },
+  showMarkers: function (show) {
+    var i = 0, node = this.container.firstElementChild;
+    var display = (show ? "block": "none");
+    while (i++ < 4) {node.style.display = display; node = node.nextElementSibling}
+  },
+  setRenderer: function (renderer) {
+    MathJax.Hub.Queue(
+      ["setRenderer",MathJax.Hub,renderer,"jax/mml"],
+      ["Rerender",MathJax.Hub]
+    );
+  },
+  reRender: function () {
+    MathJax.Hub.Queue(["Rerender",MathJax.Hub]);
+  }
+}
+</script>
+<style>
+.markers {
+  display:none;
+  width:2.46em;
+  position:absolute;
+  top:0; bottom:0;
+  z-index: -1;
+}
+.light {
+  background:#F0F0F0;
+}
+.dark {
+  background:#E0E0E0;
+}
+</style>
+</head>
+<body style="padding:0 2em">
+
+<div id="container" style="border:1px solid black; position:relative; font-size: 150%">
+<div class="markers light" style="left:50%"></div>
+<div class="markers dark" style="right:50%"></div>
+<div class="markers light" style="left:0"></div>
+<div class="markers dark" style="right:0"></div>
+
+
+\[
+x + x + x + x +
+x + x + x + x +
+x + x + x + x \tag{a long tag}
+\]
+
+\[
+x+ x + x + x + x\tag{a long tag}
+\]
+
+\[
+x+ x + x + x + x\tag{x}
+\]
+
+\[
+x+ x + x + x + x\\\Rule{1px}{.5em}{0px}
+\]
+
+</div>
+<nobr>
+<span id="range_output" style="display:inline-block; width:8%; text-align:center; margin-top:-.2em">100%</span>
+<input type="range" id="width" max="100" min="10" value="100"
+ style="width:90%; margin-top:1em"
+ oninput="Lab.setWidth(this.value)"></input>
+</nobr>
+<br/><br/>
+
+<table style="border:2px groove; padding:5px 10px">
+<tr><td align="right">Align: <select id="align" style="width:5em" onchange="Lab.setAlign(this.value)">
+<option value="left">left</option>
+<option value="center">center</option>
+<option value="right">right</option>
+</select></td></tr>
+<tr><td align="right">Label Side: <select id="side" style="width:5em" onchange="Lab.setSide(this.value)">
+<option value="left">left</option>
+<option value="right">right</option>
+</select></td></tr>
+<tr><td align="right">displayIndent: <input id="indent" value="0em" size="8" onchange="Lab.setIndent(this.value)" /></td></tr>
+<tr><td align="right">indentShift: <input id="shift" value="0em" size="8" onchange="Lab.setShift(this.value)" /></td></tr>
+<tr><td align="right"><input type="checkbox" id="markers" onchange="Lab.showMarkers(this.checked)"/> Show Markers</td></tr>
+<tr><td height="5px"></td></tr>
+<tr><td align="right">Renderer: <select id="renderer" onchange="Lab.setRenderer(this.value)">
+<option value="HTML-CSS">HTML-CSS</option>
+<option value="SVG">SVG</option>
+<option value="CommonHTML">CommonHTML</option>
+<option value="NativeMML">NativeMML</option>
+</select></td></tr>
+<tr><td align="right"><input type="button" value="Re-Render" onclick="Lab.reRender()"/></td></tr>
+</table>
+
+<script>
+Lab.init();
+</script>
+
+</body>
+</html>

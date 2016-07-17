@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<title>MathJax Interactive MathML Lab</title>
+<!-- Copyright (c) 2010 by The MathJax Consortium.  All rights reserved. -->
+<script>
+var Lab = {
+  webFonts: true,
+  localFonts: true,
+  prefFont: "TeX",
+  output: "HTML-CSS",
+  defaultMath: '<math>\n<!--Place MathML here and press "Typeset"-->\n</math>',
+  version: "2.6",
+  unpacked: true,
+  mmlSpacing: false,
+
+  getVars: function  () {
+    MML = MathJax.ElementJax.mml;
+    MATHML = MathJax.InputJax.MathML;
+    HTMLCSS = MathJax.OutputJax["HTML-CSS"];
+    PHTML = MathJax.OutputJax.PreviewHTML;
+    CHTML = MathJax.OutputJax.CommonHTML;
+    SVG = MathJax.OutputJax.SVG;
+    NMML = MathJax.OutputJax.NativeMML;
+  },
+
+  focus: function () {this.Math.focus()},
+  select: function () {this.Math.focus(); this.Math.select()},
+
+  Typeset: function() {
+    MathJax.Hub.Queue(
+      ["Text",this.jax,"<math></math>"],
+      ["Text",this.jax,this.Math.value]
+    );
+  },
+
+  setPrefFont: function (font) {
+    this.prefFont = font;
+    this.reload();
+  },
+
+  setWebFont: function (allow) {
+    this.webFonts = allow;
+    this.reload();
+  },
+
+  setLocalFont: function (allow) {
+    this.localFonts = allow;
+    this.reload();
+  },
+
+  setOutput: function (mode) {
+    this.output = mode;
+    MathJax.Hub.Queue(
+      ["setRenderer",MathJax.Hub,mode,"jax/mml"],
+      ["Rerender",MathJax.Hub]
+    );
+  },
+
+  setVersion: function (version) {
+    this.version = version;
+    this.reload();
+  },
+  setUnpacked: function (unpacked) {
+    this.unpacked = unpacked;
+    this.reload();
+  },
+
+  setMMLspacing: function (use) {
+    this.mmlSpacing = use;
+    MathJax.InputJax.MathML.config.useMathMLspacing = use;
+    this.Typeset(); this.focus();
+  },
+
+  startTimer: function () {this.start = new Date().getTime()},
+  endTimer: function () {
+    var time = (new Date().getTime() - this.start)/1000;
+    this.time.innerHTML = time + " secs";
+  },
+
+  checkKey: function (textarea,event) {
+    if (!event) {event = window.event}
+    var code = event.which || event.keyCode;
+    if ((event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) &&
+        (code === 13 || code === 10)) {
+      if (event.preventDefault) {event.preventDefault()}
+      event.returnValue = false;
+      this.Typeset();
+    }
+  },
+
+  Example: {
+    "Quadratic Formula": "initialMath=%3Cmath%20display%3D%22block%22%3E%0A%20%20%3Cmi%3Ex%3C/mi%3E%0A%20%20%3Cmo%3E%3D%3C/mo%3E%0A%20%20%3Cmfrac%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmo%3E%u2212%3C/mo%3E%3Cmi%3Eb%3C/mi%3E%0A%20%20%20%20%20%20%3Cmo%3E%B1%3C/mo%3E%0A%20%20%20%20%20%20%3Cmsqrt%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmsup%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Eb%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmn%3E2%3C/mn%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/msup%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%u2212%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmn%3E4%3C/mn%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ea%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ec%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3C/msqrt%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmn%3E2%3C/mn%3E%0A%20%20%20%20%20%20%3Cmi%3Ea%3C/mi%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%3C/mfrac%3E%0A%3C/math%3E",
+    "Cauchy's Integral Formula": "initialMath=%3Cmath%20xmlns%3D%22http%3A//www.w3.org/1998/Math/MathML%22%20display%3D%22block%22%3E%0A%20%20%3Cmrow%3E%0A%20%20%20%20%3Cmi%3Ef%3C/mi%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%3Cmi%3Ea%3C/mi%3E%0A%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3Cmo%3E%3D%3C/mo%3E%0A%20%20%20%20%3Cmsub%3E%0A%20%20%20%20%20%20%3Cmo%3E%26%23x222E%3B%3C/mo%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3E%26%23x3B3%3B%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/msub%3E%0A%20%20%20%20%3Cmfrac%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3Ef%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3Ez%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3Ez%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2212%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3Ea%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/mfrac%3E%0A%20%20%20%20%3Cmi%3Ed%3C/mi%3E%0A%20%20%20%20%3Cmi%3Ez%3C/mi%3E%0A%20%20%3C/mrow%3E%0A%3C/math%3E",
+    "Gauss' Divergence Theorem": "initialMath=%3Cmath%20xmlns%3D%22http%3A//www.w3.org/1998/Math/MathML%22%20display%3D%22block%22%3E%0A%20%20%3Cmrow%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmsub%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x222B%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3ED%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3C/msub%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2207%3B%26%23x22C5%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3EF%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3Cmi%3Ed%3C/mi%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3EV%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3Cmo%3E%3D%3C/mo%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmsub%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x222B%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3ED%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3C/msub%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmtext%3E%26%23x2009%3B%3C/mtext%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3EF%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x22C5%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3En%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3Cmi%3Ed%3C/mi%3E%0A%20%20%20%20%20%20%3Cmi%3ES%3C/mi%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%3C/mrow%3E%0A%3C/math%3E",
+    "Double Angle Formula": "initialMath=%3Cmath%20xmlns%3D%22http%3A//www.w3.org/1998/Math/MathML%22%20display%3D%22block%22%3E%0A%20%20%3Cmrow%3E%0A%20%20%20%20%3Cmi%3Ecos%3C/mi%3E%0A%20%20%20%20%3Cmo%3E%26%23x2061%3B%3C/mo%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%3Cmi%3E%26%23x3B8%3B%3C/mi%3E%0A%20%20%20%20%20%20%3Cmo%3E+%3C/mo%3E%0A%20%20%20%20%20%20%3Cmi%3E%26%23x3C6%3B%3C/mi%3E%0A%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3Cmo%3E%3D%3C/mo%3E%0A%20%20%20%20%3Cmi%3Ecos%3C/mi%3E%0A%20%20%20%20%3Cmo%3E%26%23x2061%3B%3C/mo%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%3Cmi%3E%26%23x3B8%3B%3C/mi%3E%0A%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3Cmi%3Ecos%3C/mi%3E%0A%20%20%20%20%3Cmo%3E%26%23x2061%3B%3C/mo%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%3Cmi%3E%26%23x3C6%3B%3C/mi%3E%0A%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3Cmo%3E%26%23x2212%3B%3C/mo%3E%0A%20%20%20%20%3Cmi%3Esin%3C/mi%3E%0A%20%20%20%20%3Cmo%3E%26%23x2061%3B%3C/mo%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%3Cmi%3E%26%23x3B8%3B%3C/mi%3E%0A%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3Cmi%3Esin%3C/mi%3E%0A%20%20%20%20%3Cmo%3E%26%23x2061%3B%3C/mo%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%3Cmi%3E%26%23x3C6%3B%3C/mi%3E%0A%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%3C/mrow%3E%0A%3C/math%3E",
+    "Curl of a Vector Field": "initialMath=%3Cmath%20xmlns%3D%22http%3A//www.w3.org/1998/Math/MathML%22%20display%3D%22block%22%3E%0A%20%20%3Cmrow%3E%0A%20%20%20%20%3Cmover%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2207%3B%3C/mo%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2192%3B%3C/mo%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/mover%3E%0A%20%20%20%20%3Cmo%3E%26%23xD7%3B%3C/mo%3E%0A%20%20%20%20%3Cmover%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3EF%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2192%3B%3C/mo%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/mover%3E%0A%20%20%20%20%3Cmo%3E%3D%3C/mo%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%3Cmfrac%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmsub%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3EF%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ez%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/msub%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ey%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3C/mfrac%3E%0A%20%20%20%20%20%20%3Cmo%3E%26%23x2212%3B%3C/mo%3E%0A%20%20%20%20%20%20%3Cmfrac%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmsub%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3EF%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ey%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/msub%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ez%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3C/mfrac%3E%0A%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3Cmstyle%20mathvariant%3D%22bold%22%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3Ei%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/mstyle%3E%0A%20%20%20%20%3Cmo%3E+%3C/mo%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%3Cmfrac%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmsub%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3EF%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ex%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/msub%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ez%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3C/mfrac%3E%0A%20%20%20%20%20%20%3Cmo%3E%26%23x2212%3B%3C/mo%3E%0A%20%20%20%20%20%20%3Cmfrac%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmsub%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3EF%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ez%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/msub%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ex%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3C/mfrac%3E%0A%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3Cmstyle%20mathvariant%3D%22bold%22%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3Ej%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/mstyle%3E%0A%20%20%20%20%3Cmo%3E+%3C/mo%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%3Cmfrac%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmsub%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3EF%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ey%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/msub%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ex%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3C/mfrac%3E%0A%20%20%20%20%20%20%3Cmo%3E%26%23x2212%3B%3C/mo%3E%0A%20%20%20%20%20%20%3Cmfrac%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmsub%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3EF%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ex%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/msub%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ey%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3C/mfrac%3E%0A%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3Cmstyle%20mathvariant%3D%22bold%22%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3Ek%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/mstyle%3E%0A%20%20%3C/mrow%3E%0A%3C/math%3E",
+    "Standard Deviation": "initialMath=%3Cmath%20xmlns%3D%22http%3A//www.w3.org/1998/Math/MathML%22%20display%3D%22block%22%3E%0A%20%20%3Cmrow%3E%0A%20%20%20%20%3Cmi%3E%26%23x3C3%3B%3C/mi%3E%0A%20%20%20%20%3Cmo%3E%3D%3C/mo%3E%0A%20%20%20%20%3Cmsqrt%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmfrac%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmn%3E1%3C/mn%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3EN%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3C/mfrac%3E%0A%20%20%20%20%20%20%20%20%3Cmstyle%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmunderover%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2211%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ei%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%3D%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmn%3E1%3C/mn%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3EN%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/munderover%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmsup%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmo%20stretchy%3D%22false%22%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmsub%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ex%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ei%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/msub%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2212%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3E%26%23x3BC%3B%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmo%20stretchy%3D%22false%22%3E%29%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmn%3E2%3C/mn%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/msup%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3C/mstyle%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/msqrt%3E%0A%20%20%20%20%3Cmo%3E.%3C/mo%3E%0A%20%20%3C/mrow%3E%0A%3C/math%3E",
+    "Christoffel Symbols": "initialMath=%3Cmath%20xmlns%3D%22http%3A//www.w3.org/1998/Math/MathML%22%20display%3D%22block%22%3E%0A%20%20%3Cmrow%3E%0A%20%20%20%20%3Cmsup%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%20%20%3Cmsub%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2207%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3EX%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3C/msub%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3EY%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3Ek%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/msup%3E%0A%20%20%20%20%3Cmo%3E%3D%3C/mo%3E%0A%20%20%20%20%3Cmsup%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3EX%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3Ei%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/msup%3E%0A%20%20%20%20%3Cmsup%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmo%20stretchy%3D%22false%22%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%20%20%3Cmsub%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2207%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ei%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3C/msub%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3EY%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3Cmo%20stretchy%3D%22false%22%3E%29%3C/mo%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3Ek%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/msup%3E%0A%20%20%20%20%3Cmo%3E%3D%3C/mo%3E%0A%20%20%20%20%3Cmsup%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3EX%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%3Cmi%3Ei%3C/mi%3E%0A%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%3C/msup%3E%0A%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%3Cmo%3E%28%3C/mo%3E%0A%20%20%20%20%20%20%3Cmfrac%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmsup%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3EY%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ek%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/msup%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmo%3E%26%23x2202%3B%3C/mo%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmsup%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ex%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ei%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/msup%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3C/mfrac%3E%0A%20%20%20%20%20%20%3Cmo%3E+%3C/mo%3E%0A%20%20%20%20%20%20%3Cmsubsup%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3E%26%23x393%3B%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ei%3C/mi%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3Em%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3Ek%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3C/msubsup%3E%0A%20%20%20%20%20%20%3Cmsup%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3EY%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%20%20%3Cmrow%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cmi%3Em%3C/mi%3E%0A%20%20%20%20%20%20%20%20%3C/mrow%3E%0A%20%20%20%20%20%20%3C/msup%3E%0A%20%20%20%20%20%20%3Cmo%3E%29%3C/mo%3E%0A%20%20%20%20%3C/mrow%3E%0A%20%20%3C/mrow%3E%0A%3C/math%3E"
+  },
+  Select: function (which) {
+    if (which === "") return;
+    var param = [];
+    if (this.output !== "HTML-CSS") {param.push("output="+this.output)}
+    if (this.prefFont !== "TeX") {param.push("prefFont="+this.prefFont)}
+    if (!this.webFonts) {param.push("webFonts=false")}
+    if (!this.localFonts) {param.push("localFonts=false")}
+    if (this.version != "develop") {param.push("version="+this.version)}
+    if (!this.unpacked) {param.push("unpacked=false")}
+    if (this.mmlSpacing) {param.push("mmlSpacing=true")}
+    param.push(this.Example[which]);
+    window.location = String(window.location).replace(/\?(.|\n)*/,"") + "?" + param.join("&");
+  },
+
+  reload: function () {
+    var param = [];
+    if (this.output !== "HTML-CSS") {param.push("output="+this.output)}
+    if (this.prefFont !== "TeX") {param.push("prefFont="+this.prefFont)}
+    if (!this.webFonts) {param.push("webFonts=false")}
+    if (!this.localFonts) {param.push("localFonts=false")}
+    if (this.version != "develop") {param.push("version="+this.version)}
+    if (!this.unpacked) {param.push("unpacked=false")}
+    if (this.mmlSpacing) {param.push("mmlSpacing=true")}
+    if (this.Math.value !== this.defaultMath) {param.push("initialMath="+escape(this.Math.value))}
+    if (param.length) {param = "?"+param.join("&")} else {param = ""}
+    window.location = String(window.location).replace(/\?.*/,"")+param;
+  },
+
+  unpack: function (string) {
+    if (!string.match(/\S/)) return;
+    var param = string.split(/&/);
+    for (var i = 0, m = param.length; i < m; i++) {
+      var keyvalue = param[i].split(/=/);
+      keyvalue[1] = unescape(keyvalue[1]);
+      if (keyvalue[1] === "true") {keyvalue[1] = true}
+      if (keyvalue[1] === "false") {keyvalue[1] = false}
+      this[keyvalue[0]] = keyvalue[1];
+    }
+  },
+
+  controls: {
+    prefFont:    function () {Lab.setPrefFont(this.value)},
+    webFonts:    function () {Lab.setWebFont(this.checked)},
+    localFonts:  function () {Lab.setLocalFont(this.checked)},
+    output:      function () {Lab.setOutput(this.value)},
+    version:     function () {Lab.setVersion(this.value)},
+    unpacked:    function () {Lab.setUnpacked(this.checked)},
+    mmlSpacing:  function () {Lab.setMMLspacing(this.checked)}
+  },
+
+  Startup: function () {
+    for (var i in this.controls) {if (this.controls.hasOwnProperty(i)) {
+      var control = document.getElementById(i);
+      if (control.type === "checkbox") {
+        control.checked = this[i];
+        control.onclick = this.controls[i];
+      } else {
+        control.value = this[i];
+        control.onchange = this.controls[i];
+      }
+    }}
+    var math = this.Math.value = this.initialMath || this.defaultMath;
+    this.jax = MathJax.Hub.getAllJax()[0];
+    if (math.replace(/\r\n?/g,"\n") !== this.defaultMath)
+      {this.Typeset(); this.focus()} else {this.select()}
+    this.getVars();
+  }
+
+}
+
+Lab.unpack(window.location.search.substr(1));
+
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/MathML","output/"+Lab.output],
+    showProcessingMessages: false,
+    "HTML-CSS": {
+      preferredFont: (Lab.localFonts ? Lab.prefFont : null),
+      availableFonts: (Lab.localFonts ? [Lab.prefFont] : []),
+      webFont: (Lab.webFonts ? Lab.prefFont : null)
+    },
+    MathML: {useMathMLspacing: Lab.mmlSpacing},
+    SVG: {
+      font: (Lab.prefFont === "STIX" ? "STIX-Web" : Lab.prefFont)
+    }
+  });
+  MathJax.Hub.processSectionDelay = 0;
+  MathJax.Hub.Register.MessageHook("Begin Process",["startTimer",Lab]);
+  MathJax.Hub.Register.MessageHook("End Process",["endTimer",Lab]);
+  MathJax.Hub.Register.MessageHook("Begin Update",["startTimer",Lab]);
+  MathJax.Hub.Register.MessageHook("End Update",["endTimer",Lab]);
+</script>
+<script>
+(function () {
+  var src = {develop: "../../../MathJax/", master: "../../../Git/MathJax/"}[Lab.version] ||
+              "http://cdn.mathjax.org/mathjax/"+Lab.version+"-latest/";
+  if (Lab.unpacked) {src += "unpacked/"}
+  src += "MathJax.js";
+  document.writeln('<script src="'+src+'"></'+'script>');
+})();
+</script>
+</head>
+<body style="background-color:#EEEEEE">
+
+<!-- *Begin-Document-Body -->
+
+<a href="TeX.html"><button>TeX</button></a>
+<button disabled="true">MathML</button>
+<a href="AsciiMath.html"><button>AsciiMath</button></a>
+<p>
+
+<center>
+<table border="0" cellspacing="12" cellpadding="0" style="width:80%">
+
+<tr><td colspan="2"><center>
+<div style="border:3px ridge; padding:1em; background-color:white">
+<span style="font-size:133%">
+... some text before
+<span class="MathJax_Preview">[Math]</span><script type="math/mml"><math><mtext>[Math]</mtext></math></script>
+and some after ...</span>
+</div>
+</center></td></tr>
+
+<tr valign="TOP"><td width="80%"><textarea id="Math" rows="20" 
+style="font-family: monaco,courier; font-size:100%; width:100%"
+onkeypress="Lab.checkKey(this,event)"></textarea></td>
+
+<td rowspan="2" width="20%">
+<div style="border:3px groove; padding:10px; font-size:75%; text-align:left">
+
+<nobr><label>Preferred font: <select id="prefFont">
+<option value="TeX">TeX</option>
+<option value="STIX">STIX</option>
+<option value="STIX-Web">STIX (Web)</option>
+<option value="Asana-Math">Asana</option>
+<option value="Gyre-Pagella">Gyre-Pagella</option>
+<option value="Gyre-Termes">Gyre-Termes</option>
+<option value="Latin-Modern">Latin-Modern</option>
+<option value="Neo-Euler">Neo-Euler</option>
+</select></label></nobr><br>
+Allow: <label><input type="checkbox" id="webFonts" CHECKED> web fonts</label>
+<label><input type="checkbox" id="localFonts" CHECKED> local fonts</label><br>
+<label><input type="checkbox" id="mmlSpacing"> Use MathML spacing</label>
+<p>
+
+<nobr><label>Output Mode: <select id="output">
+<option value="HTML-CSS">HTML-CSS</option>
+<option value="CommonHTML">Common HTML</option>
+<option value="PreviewHTML">Preview HTML</option>
+<option value="NativeMML">Native MathML</option>
+<option value="SVG">SVG</option>
+<option value="PlainSource">Plain Source</option>
+</select></label></nobr>
+
+<p style="margin-bottom:0">
+
+<nobr><label>Version: <select id="version">
+<option value="develop">develop</option>
+<option value="master">master</option>
+<option value="2.6">v2.6</option>
+<option value="2.5">v2.5</option>
+<option value="2.4">v2.4</option>
+<option value="2.3">v2.3</option>
+<option value="2.2">v2.2</option>
+<option value="2.1">v2.1</option>
+<option value="2.0">v2.0</option>
+<option value="1.1">v1.1</option>
+<option value="1.0">v1.0</option>
+</select></label>
+<label><input type="checkbox" id="unpacked" CHECKED> unpacked</label></nobr>
+</div>
+<p>
+
+<center>
+<input type="button" value="Typeset" onclick="Lab.Typeset()"><br>
+<div style="margin-top:5px; font-size:75%">
+<nobr>Time: <span id="time"></span></nobr>
+
+<p>
+<br>
+<label>Show: <select onchange="Lab.Select(this.value)">
+<option value="">(select example)</option>
+<option value="">----------------</option>
+<option value="Quadratic Formula">Quadratic Formula</option>
+<option value="Cauchy's Integral Formula">Cauchy's Integral Formula</option>
+<option value="Double Angle Formula">Double angle formula for Cosines</option>
+<option value="Gauss' Divergence Theorem">Gauss' Divergence Theorem</option>
+<option value="Curl of a Vector Field">Curl of a Vector Field</option>
+<option value="Standard Deviation">Standard Deviation</option>
+<option value="Christoffel Symbols">Definition of Christoffel Symbols</option>
+</select></label>
+</div>
+
+</center>
+</td></tr>
+
+</table>
+</center>
+
+<script>
+Lab.Math = document.getElementById("Math");
+Lab.HTML = document.getElementById("HTML");
+Lab.time = document.getElementById("time");
+MathJax.Hub.Queue(["Startup",Lab]);
+</script>
+
+</body>
+</html>
