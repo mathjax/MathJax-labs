@@ -12,7 +12,7 @@ var Lab = {
   prefFont: "TeX",
   output: "HTML-CSS",
   defaultMath: 'text{[Math]}',
-  version: "2.6",
+  version: "2.7.5",
   unpacked: true,
   auto: false,
 
@@ -216,7 +216,7 @@ Lab.unpack(window.location.search.substr(1));
 </script>
 <script>
 (function () {
-  var src = "https://cdn.mathjax.org/mathjax/"+Lab.version+"-latest/";
+  var src = "https://cdn.rawgit.com/mathjax/MathJax/"+Lab.version+"/";
   if (Lab.unpacked) {src += "unpacked/"}
   src += "MathJax.js";
   document.writeln('<script src="'+src+'"></'+'script>');
@@ -282,15 +282,19 @@ Allow: <label><input type="checkbox" id="webFonts" CHECKED> web fonts</label>
 <nobr><label>Version: <select id="version">
 <option value="develop">develop</option>
 <option value="master">master</option>
-<option value="2.6">v2.6</option>
-<option value="2.5">v2.5</option>
-<option value="2.4">v2.4</option>
-<option value="2.3">v2.3</option>
-<option value="2.2">v2.2</option>
-<option value="2.1">v2.1</option>
-<option value="2.0">v2.0</option>
-<option value="1.1">v1.1</option>
-<option value="1.0">v1.0</option>
+<option value="2.7.5">v2.7.5</option>
+<option value="2.7.4">v2.7.4</option>
+<option value="2.7.3">v2.7.3</option>
+<option value="2.7.2">v2.7.2</option>
+<option value="2.7.1">v2.7.1</option>
+<option value="2.7.0">v2.7.0</option>
+<option value="2.6.1">v2.6</option>
+<option value="2.5.3">v2.5</option>
+<option value="2.4.0">v2.4</option>
+<option value="2.3.0">v2.3</option>
+<option value="2.2.0">v2.2</option>
+<option value="2.1.0">v2.1</option>
+<option value="2.0.0">v2.0</option>
 </select></label>
 <label><input type="checkbox" id="unpacked" CHECKED> unpacked</label></nobr>
 </div>
