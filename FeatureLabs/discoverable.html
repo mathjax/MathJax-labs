@@ -90,11 +90,15 @@ function setContext(menu) {
     });
   });
   </script>
+<<<<<<< HEAD
 <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.5/unpacked/latest.js?config=TeX-AMS_HTML"></script>
+=======
+<script type="text/javascript" src="https://rawgit.com/mathjax/MathJax/master/unpacked/MathJax.js?config=TeX-AMS_HTML"></script>
+>>>>>>> origin/master
 </head>
 <body>
 
-<div style="position:fixed; bottom:5px; right:5px; width:auto; padding:10px; 
+<div style="position:fixed; bottom:5px; right:5px; width:auto; padding:10px;
 background-color:#DDD; border:3px ridge; font-size:small; z-index:75">
 <label><input type="checkbox" id="Discoverable" onchange="setDiscover(this.checked)"> Discoverable</label><br/>
 <label style="margin-left:2em"><input type="checkbox" id = "Haze" checked="true" disabled="true" onchange="setHaze(this.checked)"> Outline Haze</label><br/>
@@ -189,7 +193,7 @@ then according to Green's theorem and the expression in Chapter 2, Eq.
 
 $$
 \int_C P\,du + Q\, dv =
- \int\!\!\!\int_A \left({\partial Q\over \partial u} - {\partial P\over 
+ \int\!\!\!\int_A \left({\partial Q\over \partial u} - {\partial P\over
  \partial v}\right) {1\over \sqrt{EG-F^2}}\,dA,
 $$
 where $dA$ is the element of area of the region $R$ enclosed by the curve
@@ -204,7 +208,7 @@ point $P$ makes the angle $\theta$ with the coordinate curve $v = {\rm
 constant}$ and if the coordinate curves are orthogonal, then, according to
 Liouville's formula (1-13):
 $$
-\kappa_g\,ds = d\theta + \kappa_1(\cos\theta)\,ds + 
+\kappa_g\,ds = d\theta + \kappa_1(\cos\theta)\,ds +
 \kappa_2(\sin\theta)\,ds.
 $$
 
@@ -215,18 +219,18 @@ $$
 $$
 we find by application of Green's theorem:
 $$
-\int_C\kappa_g\,ds = \int_C d\theta + 
-\int\!\!\!\int_A\left({\partial\over\partial u} \left(\kappa_2\sqrt{G}\,\right) - 
+\int_C\kappa_g\,ds = \int_C d\theta +
+\int\!\!\!\int_A\left({\partial\over\partial u} \left(\kappa_2\sqrt{G}\,\right) -
 {\partial\over \partial v}\left(\kappa_1\sqrt{E}\,\right)\right)\,du\,dv.
 $$
 
 <p>
 The Gaussian curvature can be written, according to Chapter 3, Eq. (3-7),
 $$
-K = -{1\over 2\sqrt{EG}} \left[{\partial\over\partial u}{G_u\over 
+K = -{1\over 2\sqrt{EG}} \left[{\partial\over\partial u}{G_u\over
 \sqrt{EG}} + {\partial\over\partial v}{E_v\over\sqrt{EG}}\right]
 ={1\over\sqrt{EG}}\left[ -{\partial\over\partial u}
-\left(\kappa_2\sqrt{G}\,\right) + {\partial\over\partial v} 
+\left(\kappa_2\sqrt{G}\,\right) + {\partial\over\partial v}
 \left(\kappa_1\sqrt{E}\,\right)\right],
 $$
 so we obtain the formula

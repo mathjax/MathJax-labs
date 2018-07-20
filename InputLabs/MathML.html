@@ -12,7 +12,7 @@ var Lab = {
   prefFont: "TeX",
   output: "HTML-CSS",
   defaultMath: '<math>\n<!--Place MathML here and press "Typeset"-->\n</math>',
-  version: "2.7.5",
+  version: "master",
   unpacked: true,
   mmlSpacing: false,
 
@@ -107,7 +107,7 @@ var Lab = {
     if (this.prefFont !== "TeX") {param.push("prefFont="+this.prefFont)}
     if (!this.webFonts) {param.push("webFonts=false")}
     if (!this.localFonts) {param.push("localFonts=false")}
-    if (this.version != "develop") {param.push("version="+this.version)}
+    param.push("version="+this.version);
     if (!this.unpacked) {param.push("unpacked=false")}
     if (this.mmlSpacing) {param.push("mmlSpacing=true")}
     param.push(this.Example[which]);
@@ -120,7 +120,7 @@ var Lab = {
     if (this.prefFont !== "TeX") {param.push("prefFont="+this.prefFont)}
     if (!this.webFonts) {param.push("webFonts=false")}
     if (!this.localFonts) {param.push("localFonts=false")}
-    if (this.version != "develop") {param.push("version="+this.version)}
+    param.push("version="+this.version);
     if (!this.unpacked) {param.push("unpacked=false")}
     if (this.mmlSpacing) {param.push("mmlSpacing=true")}
     if (this.Math.value !== this.defaultMath) {param.push("initialMath="+escape(this.Math.value))}
@@ -196,7 +196,7 @@ Lab.unpack(window.location.search.substr(1));
 </script>
 <script>
 (function () {
-  var src = "https://cdn.rawgit.com/mathjax/MathJax/"+Lab.version+"/";
+  var src = "https://rawgit.com/mathjax/MathJax/"+Lab.version+"/";
   if (Lab.unpacked) {src += "unpacked/"}
   src += "MathJax.js";
   document.writeln('<script src="'+src+'"></'+'script>');
@@ -224,7 +224,7 @@ and some after ...</span>
 </div>
 </center></td></tr>
 
-<tr valign="TOP"><td width="80%"><textarea id="Math" rows="20" 
+<tr valign="TOP"><td width="80%"><textarea id="Math" rows="20"
 style="font-family: monaco,courier; font-size:100%; width:100%"
 onkeypress="Lab.checkKey(this,event)"></textarea></td>
 
@@ -266,14 +266,13 @@ Allow: <label><input type="checkbox" id="webFonts" CHECKED> web fonts</label>
 <option value="2.7.2">v2.7.2</option>
 <option value="2.7.1">v2.7.1</option>
 <option value="2.7.0">v2.7.0</option>
-<option value="2.6.1">v2.6</option>
-<option value="2.5.3">v2.5</option>
-<option value="2.4.0">v2.4</option>
-<option value="2.3.0">v2.3</option>
-<option value="2.2.0">v2.2</option>
-<option value="2.1.0">v2.1</option>
-<option value="2.0.0">v2.0</option>
-<option value="v1.1a">v1.1</option>
+<option value="2.6.1">v2.6.1</option>
+<option value="2.5.3">v2.5.3</option>
+<option value="2.4.0">2.4.0</option>
+<option value="2.3.0">2.3.0</option>
+<option value="2.2.0">2.2.0</option>
+<option value="2.1.0">2.1.0</option>
+<option value="2.0.0">2.0.0</option>
 </select></label>
 <label><input type="checkbox" id="unpacked" CHECKED> unpacked</label></nobr>
 </div>
